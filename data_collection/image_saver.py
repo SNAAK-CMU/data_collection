@@ -14,7 +14,14 @@ import threading
 class ImageSaverNode(Node):
     def __init__(self):
         super().__init__('image_saver_node')
+
+        # Declare parameters
+        self.declare_parameter('save_directory', '/home/cliche/data_collection_images')
+
+        # Get the values of the parameters
+        self.save_directory = self.get_parameter('save_directory').get_parameter_value().string_value
         
+        # Create subscribers
         self.subscription = self.create_subscription(
             Image,
             '/camera/camera/color/image_rect_raw',  # Adjust topic name based on your setup
@@ -24,7 +31,6 @@ class ImageSaverNode(Node):
         
         self.bridge = CvBridge()
         self.image_count = 0
-        self.save_directory = '/home/cliche/data_collection_images'
         
         if not os.path.exists(self.save_directory):
             os.makedirs(self.save_directory)
