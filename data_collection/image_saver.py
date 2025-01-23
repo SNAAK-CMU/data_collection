@@ -34,6 +34,14 @@ class ImageSaverNode(Node):
         
         if not os.path.exists(self.save_directory):
             os.makedirs(self.save_directory)
+
+        self.save_dir_jpg = self.save_directory + "/jpg_images"
+        self.save_dir_png = self.save_directory + "/png_images"
+        if not os.path.exists(self.save_dir_jpg):
+            os.makedirs(self.save_dir_jpg)
+        if not os.path.exists(self.save_dir_png):
+            os.makedirs(self.save_dir_png)
+
         
         self.get_logger().info('ImageSaverNode initialized. Press any key to save an image.')
         
@@ -81,8 +89,14 @@ class ImageSaverNode(Node):
 
     def save_image(self):
         if hasattr(self, 'cv_image'):
-            filename = os.path.join(self.save_directory, f"image_{self.image_count:04d}.png")
+            # Save jpg image
+            filename = os.path.join(self.save_dir_jpg, f"image_{self.image_count:04d}.jpg")
             cv2.imwrite(filename, self.cv_image)
+
+            # Save png image
+            filename = os.path.join(self.save_dir_png, f"image_{self.image_count:04d}.png")
+            cv2.imwrite(filename, self.cv_image)
+
             self.get_logger().info(f"Saved image {filename}")
             self.image_count += 1
         else:
